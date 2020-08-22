@@ -18,5 +18,6 @@ void print_date(struct tm * date, int display_time);
 int print_current_goals();
 int print_past_goals();
 int print_all_goals(); // is this function really necessary?
-
+char **parse_args(char * arguments, int *argc);
+void free_parsed_args(char **argv);
 #endif

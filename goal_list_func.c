@@ -31,3 +31,26 @@ void print_date(struct tm * date, int display_time){
 
   printf("%s\n", date_string);
 }
+
+char **parse_args(char * arguments, int *argc)
+{
+  //first we must count the arguments
+  *argc = 0;
+  char * cur_char = arguments;
+  char in_arg = 0; //whether or not cur_char is already in the middle of some argument
+  while (*cur_char != '\n' && *cur_char != '\0')
+  {
+    if (*cur_char == ' ')
+    {
+      in_arg = 0;
+    } else if (!in_arg)
+    {
+      *argc = *argc + 1;
+      in_arg = 1;
+    }
+    cur_char++;
+  }
+
+  printf("argument count = %d \n", *argc);
+}
+void free_parsed_args(char **argv);

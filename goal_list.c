@@ -6,21 +6,24 @@
 #include <time.h>
 #include <goal_list.h>
 
+#define MAX_INPUT 100
+
 int main()
 {
-  time_t rawtime;
-  struct tm *timeinfo;
+  //print_current_goals();
 
-  time(&rawtime);
-  timeinfo = localtime (&rawtime);
+  char input[MAX_INPUT];
+  char ** args;
+  int argc;
 
-  printf("Current local time and date: %s", asctime(timeinfo));
+  do
+  {
+    fgets(input, MAX_INPUT, stdin);
+    printf("%s", input);
 
-  print_date(timeinfo, 0);
+    args = parse_args(input, &argc);
 
-  print_date(timeinfo, 1);
+    printf("x = %d\n", x);
 
-  goal * my_goal = malloc(sizeof(goal));
-  my_goal->name = strdup("this is my goal");
-  my_goal->date_set = * timeinfo;
+  } while (strncmp(input, "exit", 4) != 0);
 }
