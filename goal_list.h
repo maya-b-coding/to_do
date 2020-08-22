@@ -5,9 +5,13 @@ const int MAX_CHARS;
 char * DATE_NO_TIME;
 char * DATE_W_TIME;
 
-struct goal{
-
-};
+typedef struct{
+  struct tm date_set;
+  struct tm date_target; //day the goal was initially intended to be completeted
+  struct tm date_completed;
+  char * name;
+  int completed; //boolean that tells if it's been completed or not
+} goal;
 
 void check_errors(int error_status);
 void print_date(struct tm * date, int display_time);
