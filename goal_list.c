@@ -18,5 +18,4 @@ int main()
   print_date(timeinfo, 0);
 
   print_date(timeinfo, 1);
-
 }
