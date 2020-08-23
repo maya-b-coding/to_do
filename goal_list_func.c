@@ -38,19 +38,96 @@ char **parse_args(char * arguments, int *argc)
   *argc = 0;
   char * cur_char = arguments;
   char in_arg = 0; //whether or not cur_char is already in the middle of some argument
-  while (*cur_char != '\n' && *cur_char != '\0')
+  char in_quote = 0; //whether or not cur_char is in a quote
+  while (*cur_char != '\0')
   {
-    if (*cur_char == ' ')
+    if (!in_quote)
     {
-      in_arg = 0;
-    } else if (!in_arg)
+      if (*cur_char == ' ' || *cur_char == '\n')
+      {
+        in_arg = 0;
+      } else if (*cur_char == '\"')
+      {
+        char * next_char = cur_char + 1;
+
+        if (*next_char != '\0' && *next_char != '\n' && *next_char != '\"')
+        {
+          *argc = *argc + 1;
+        }
+
+        in_arg = 0;
+        in_quote = 1;
+      } else if (!in_arg)
+      {
+        *argc = *argc + 1;
+
+        in_arg = 1;
+      }
+    } else if (*cur_char == '\"')
     {
-      *argc = *argc + 1;
-      in_arg = 1;
+      in_quote = 0;
     }
     cur_char++;
   }
 
-  printf("argument count = %d \n", *argc);
+  char ** argv;
+
+  if (!(argv = malloc((*argc) * sizeof(char *))))
+  {
+    printf("error allocating memory for argv in parse_args\n");
+    return NULL;
+  }
+
+  cur_char = arguments;
+  int i = 0;
+  in_arg = 0;
+  in_quote = 0;
+
+  while (*cur_char != '\0')
+  {
+    if (!in_quote)
+    {
+      if (*cur_char == ' ' || *cur_char == '\n')
+      {
+        in_arg = 0;
+        *cur_char = '\0';
+      } else if (*cur_char == '\"')
+      {
+        in_arg = 0;
+        in_quote = 1;
+        *cur_char = '\0';
+        char * next_char = cur_char + 1;
+
+        if (*next_char != '\0' && *next_char != '\n' && *next_char != '\"')
+        {
+          argv[i] = next_char;
+          i++;
+        }
+      } else if (!in_arg)
+      {
+        in_arg = 1;
+        argv[i] = cur_char;
+        i++;
+      }
+    } else if (*cur_char == '\"' || *cur_char == '\n')
+    {
+      *cur_char = '\0';
+      in_quote = 0;
+    }
+    cur_char++;
+  }
+
+  return argv;
 }
-void free_parsed_args(char **argv);
+
+void free_parsed_args(char **argv)
+{
+  if (argv)
+  {
+    free(argv);
+  }
+}
+
+void add_goal(char ** argv, int argc){
+  printf("adding goal\n");
+}

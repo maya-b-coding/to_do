@@ -15,6 +15,7 @@ typedef struct{
 
 void check_errors(int error_status);
 void print_date(struct tm * date, int display_time);
+void add_goal(char ** argv, int argc);
 int print_current_goals();
 int print_past_goals();
 int print_all_goals(); // is this function really necessary?
