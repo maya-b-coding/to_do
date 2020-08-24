@@ -131,6 +131,33 @@ void free_parsed_args(char **argv)
 void add_goal(char ** argv, int argc)
 {
   printf("adding goal\n");
+
+  goal my_goal;
+
+  if (argc > 2)
+  {
+    struct tm * date = NULL;
+    date = string_to_date(argv[2]);
+    if (date != NULL)
+    {
+      my_goal = create_goal(argv[1], *date, 1);
+      free(date);
+    } else
+    {
+      printf("Date is NULL\n");
+      return; //eror when converting the date
+    }
+  }
+  else if (argc > 1)
+  {
+    struct tm empty_date;
+    my_goal = create_goal(argv[1], empty_date, 0);
+  } else
+  {
+    printf("invalid input: not enough arguments\n");
+  }
+
+  printf("my_goal.name = %s\n", my_goal.name);
 }
 
 goal create_goal(char * name, struct tm target_date, int has_target)
@@ -138,13 +165,181 @@ goal create_goal(char * name, struct tm target_date, int has_target)
   goal new_goal;
 
   new_goal.name = name;
-  new_goal.has_target = has_target;
+  new_goal.has_target = (char) has_target;
   new_goal.is_completed = 0;
   new_goal.is_expired = 0;
 
   if (has_target)
   {
-    new_goal.target_date = target_date;
+    new_goal.date_target = target_date;
 
   }
+
+  //set date_set to current date
+  time_t rawtime;
+  time(&rawtime);
+  new_goal.date_set = *localtime(&rawtime);
+
+  return new_goal;
+}
+
+struct tm * string_to_date(char * str)
+{
+  if (!is_date(str))
+  {
+    printf("date enterred INCORRECTLY!\n");
+    return NULL;
+  }
+
+  int month;
+  int day;
+  int year;
+
+
+  printf("num_str = %s\n", num_str);
+
+  month = strn_to_int(str, 2);
+  if (month < 1 || month > 12)
+  {
+    printf("Error: %d is not a valid month\n", month);
+    return NULL;
+  }
+
+  num_str = strncpy(num_str, str + 6, 2);
+
+  year = atoi(num_str) + 2000;
+
+  num_str = strncpy(num_str, str + 3, 2);
+
+  day = atoi(num_str);
+
+  switch (month)
+  {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+
+      if (day > 31 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return NULL;
+      }
+      break;
+
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+      if (day > 30 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return NULL;
+      }
+      break;
+
+    case 2:
+      if (year % 4){
+        if (day > 29 || day < 1)
+        {
+          printf("%d is not a valid day in month %d on a leap year\n", day, month);
+          return NULL;
+        }
+      } else
+      {
+        if (day > 28 || day < 1)
+        {
+          printf("%d is not a valid day in month %d on a non-leap year\n", day, month);
+          return NULL;
+      }
+      }
+      break;
+  }
+
+  printf("valid date good job\n");
+  return NULL;
+}
+
+
+
+
+int is_num(char c)
+{
+  switch (c)
+  {
+    case '0':
+    case '1':
+    case '2':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+      return 1;
+    default:
+      return 0;
+  }
+}
+int is_dash_slash(char c)
+{
+  switch (c)
+  {
+    case '/':
+    case '\\':
+    case '-':
+      return 1;
+    default:
+      return 0;
+  }
+}
+
+int is_date(char * str)
+{
+  if (strlen(str) != 8)
+  {
+    printf("invalid date length, date should be of format MM-DD-YY\n");
+    return 0;
+  }
+
+  for (int i = 0; i < strlen(str); i++, str++)
+  {
+    if ((i + 1) % 3 != 0)
+    {
+      if (!is_num(*str)){
+        printf("i = %d\n", i);
+        printf("%c is not a num\n", *str);
+        printf("invalid date, date should be of format MM-DD-YY\n");
+        return 0;
+      }
+    } else if (!is_dash_slash(*str))
+    {
+      printf("i = %d\n", i);
+      printf("%c is not a dash\n", *str);
+      printf("invalid date, date should be of format MM-DD-YY\n");
+      return 0;
+    }
+
+  }
+}
+
+int strn_to_int(char * str, int n)
+{
+  //converts a string of n characters to an integer
+  char copied_str[n + 1];
+
+
+  int i;
+  for (i = 0; i < n && str[i] != '\0'; i++)
+  {
+    copied_str[i] = str[i];
+  }
+
+  copied_str[i] = '\0';
+
+  return atoi(copied_str);
 }

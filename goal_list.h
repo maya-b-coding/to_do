@@ -23,7 +23,10 @@ int print_past_goals();
 int print_all_goals(); // is this function really necessary?
 char **parse_args(char * arguments, int *argc);
 void free_parsed_args(char **argv);
+int is_num(char c);
+int is_dash_slash(char c);
+int is_date(char * str);
 
-struct tm string_to_date(char * str);
+struct tm * string_to_date(char * str);
 goal create_goal(char * name, struct tm target_date, int has_target);
 #endif

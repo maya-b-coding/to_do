@@ -6,7 +6,7 @@
 #include <time.h>
 #include <goal_list.h>
 
-#define MAX_INPUT 100
+#define MAX_INPUT 500
 
 int main()
 {
@@ -34,10 +34,10 @@ int main()
       }
     }
 
-    for (int i = 0; i < argc; i++)
+  /*  for (int i = 0; i < argc; i++)
     {
       printf("%s\n", argv[i]);
-    }
+    }*/
 
     free_parsed_args(argv);
 
