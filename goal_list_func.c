@@ -195,9 +195,6 @@ struct tm * string_to_date(char * str)
   int day;
   int year;
 
-
-  printf("num_str = %s\n", num_str);
-
   month = strn_to_int(str, 2);
   if (month < 1 || month > 12)
   {
@@ -205,15 +202,11 @@ struct tm * string_to_date(char * str)
     return NULL;
   }
 
-  num_str = strncpy(num_str, str + 6, 2);
+  year = strn_to_int(str + 6, 2) + 2000;
 
-  year = atoi(num_str) + 2000;
+  day = strn_to_int(str + 3, 2);
 
-  num_str = strncpy(num_str, str + 3, 2);
-
-  day = atoi(num_str);
-
-  switch (month)
+  switch (month) //check if the day of the month is valid
   {
     case 1:
     case 3:
@@ -242,28 +235,144 @@ struct tm * string_to_date(char * str)
       break;
 
     case 2:
-      if (year % 4){
+      if (!(year % 4)){
         if (day > 29 || day < 1)
         {
-          printf("%d is not a valid day in month %d on a leap year\n", day, month);
+          printf("%d is not a valid day in month %d of a leap year\n", day, month);
+          printf("year = %d\n", year);
           return NULL;
         }
       } else
       {
         if (day > 28 || day < 1)
         {
-          printf("%d is not a valid day in month %d on a non-leap year\n", day, month);
+          printf("%d is not a valid day in month %d of a non-leap year\n", day, month);
+          printf("year = %d\n", year);
           return NULL;
+        }
       }
-      }
+      break;
+
+    default:
       break;
   }
 
+  struct tm new_date;
   printf("valid date good job\n");
+
+  new_date.tm_sec = 0;
+  new_date.tm_min = 0;
+  new_date.tm_hour = 0;
+  new_date.tm_mday = day;
+  new_date.tm_mon = month - 1;
+  new_date.tm_year = year - 1900;
+
+  new_date.tm_wday = 0;
+  new_date.tm_yday = 0;
+
   return NULL;
 }
 
+int get_wday(int month, int day, int year){
+  int wday = year % 100;
+  wday = wday / 4;
+  wday += day;
+  switch (month) //add the month's key value
+  {
+    case 1:
+    case 10:
+      wday += 1;
+      break;
+    case 2:
+    case 3:
+    case 11:
+      wday += 4;
+      break;
+    case 5:
+      wday += 2;
+      break;
+    case 6:
+      wday += 5;
+      break;
+    case 8:
+      wday += 3;
+      break;
+    case 9:
+    case 12:
+      wday += 6;
+      break;
+    case 4:
+    case 7:
+    default:
+      break;
+  }
 
+  if (year / 100 == 20) //this is dependednt on the century... though I doubt anyone will use this in 100 years
+  {
+    wday += 6;
+  }
+
+  wday += (year % 100);
+
+  wday -= 1;
+  if (month <= 2 & !(year % 4)){
+    wday -= 1;
+  }
+  wday = wday % 7;
+
+
+
+  return wday;
+}
+
+int get_yday(int month, int day, int year){
+  int yday = 0;
+
+  for (int i = 1; i < month; i++)
+  {
+    switch(i)
+    {
+      case 1:
+      case 3:
+      case 5:
+      case 7:
+      case 8:
+      case 10:
+      case 12:
+
+        yday += 31;
+        break;
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+        yday += 30;
+        break;
+      case 2:
+        if (!(year % 4))
+        {
+          yday += 29;
+        } else
+        {
+          yday += 28;
+        }
+        break;
+      default:
+        break;
+    }
+  }
+
+  yday = yday + day - 1;
+  return yday;
+}
+
+struct tm create_date(int month, int day, int year){
+  int yday;
+  switch (month)
+  {
+
+  }
+}
 
 
 int is_num(char c)

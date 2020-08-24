@@ -16,6 +16,7 @@ int main()
   char ** argv;
   int argc = 0;
 
+
   do
   {
     fgets(input, MAX_INPUT, stdin);
@@ -27,6 +28,10 @@ int main()
       if (strcmp(argv[0], "add") == 0)
       {
         add_goal(argv, argc);
+      } else if (strcmp(argv[0], "wday") == 0)
+      {
+        int wday = get_wday(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
+        printf("weekday = %d\n", wday);
       } else if (strcmp(argv[0], "exit") == 0)
       {
         free_parsed_args(argv);

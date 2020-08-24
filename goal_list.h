@@ -26,7 +26,11 @@ void free_parsed_args(char **argv);
 int is_num(char c);
 int is_dash_slash(char c);
 int is_date(char * str);
+int strn_to_int(char * str, int n);
 
 struct tm * string_to_date(char * str);
 goal create_goal(char * name, struct tm target_date, int has_target);
+struct tm create_date(int month, int day, int year);
+int get_wday(int month, int day, int year);
+int get_yday(int month, int day, int year);
 #endif
