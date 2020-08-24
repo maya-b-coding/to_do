@@ -367,11 +367,22 @@ int get_yday(int month, int day, int year){
 }
 
 struct tm create_date(int month, int day, int year){
-  int yday;
-  switch (month)
-  {
 
-  }
+  struct tm new_date;
+
+  new_date.tm_sec = 0;
+  new_date.tm_min = 0;
+  new_date.tm_hour = 0;
+
+  new_date.tm_mday = day;
+  new_date.tm_mon = month - 1;
+  new_date.tm_year = year - 1900;
+
+  new_date.tm_wday = get_wday(month, day, year);
+  new_date.tm_yday = get_yday(month, day, year);
+
+  return new_date;
+
 }
 
 
