@@ -128,6 +128,23 @@ void free_parsed_args(char **argv)
   }
 }
 
-void add_goal(char ** argv, int argc){
+void add_goal(char ** argv, int argc)
+{
   printf("adding goal\n");
+}
+
+goal create_goal(char * name, struct tm target_date, int has_target)
+{
+  goal new_goal;
+
+  new_goal.name = name;
+  new_goal.has_target = has_target;
+  new_goal.is_completed = 0;
+  new_goal.is_expired = 0;
+
+  if (has_target)
+  {
+    new_goal.target_date = target_date;
+
+  }
 }
