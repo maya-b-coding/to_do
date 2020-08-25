@@ -7,6 +7,24 @@ const int MAX_CHARS = 20;
 char * DATE_NO_TIME = "%x";
 char * DATE_W_TIME = "%x - %I:%M%p";
 
+int strn_to_int(char * str, int n)
+{
+  //converts a string of n characters to an integer
+  char copied_str[n + 1];
+
+
+  int i;
+  for (i = 0; i < n && str[i] != '\0'; i++)
+  {
+    copied_str[i] = str[i];
+  }
+
+  copied_str[i] = '\0';
+
+  return atoi(copied_str);
+}
+
+
 int is_num(char c)
 {
   switch (c)
@@ -65,13 +83,13 @@ int is_date(char * str)
   }
 }
 
-char * date_to_str(struct tm * date, int display_time){
+void print_date(struct tm * date, int display_time){
   char * format_type = display_time == 0 ? DATE_NO_TIME : DATE_W_TIME;
   char date_string [MAX_CHARS];
 
   strftime(date_string, MAX_CHARS, format_type, date); //can i drop the size_t?
 
-  return date_string;
+  printf("%s", date_string);
 }
 
 int get_wday(int month, int day, int year)
@@ -202,21 +220,4 @@ struct tm string_to_date(char * str)
 
   struct tm new_date = create_date(month, day, year);
   return new_date;
-}
-
-int strn_to_int(char * str, int n)
-{
-  //converts a string of n characters to an integer
-  char copied_str[n + 1];
-
-
-  int i;
-  for (i = 0; i < n && str[i] != '\0'; i++)
-  {
-    copied_str[i] = str[i];
-  }
-
-  copied_str[i] = '\0';
-
-  return atoi(copied_str);
 }

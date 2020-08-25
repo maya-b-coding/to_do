@@ -182,8 +182,7 @@ void print_goal(goal cur_goal)
   if (cur_goal.has_target)
   {
     printf(" - Target Date: ");
-    char * date_str =date_to_str()&cur_goal.date_target, 0)//default to not showing time
-    printf("%s", date_str); 
+    print_date(&cur_goal.date_target, 0); //default to not showing time
   }
   printf("\n");
 }
