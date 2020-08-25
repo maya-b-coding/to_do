@@ -60,27 +60,98 @@ int is_dash_slash(char c)
 
 int is_date(char * str)
 {
+  printf("is date is running\n");
   if (strlen(str) != 8)
   {
     printf("invalid date length, date should be of format MM-DD-YY\n");
     return 0;
   }
 
-  for (int i = 0; i < strlen(str); i++, str++)
+  int length = strlen(str);
+  char * cur_char = str;
+  for (int i = 0; i < length; i++, cur_char++)
   {
     if ((i + 1) % 3 != 0)
     {
-      if (!is_num(*str)){
+      if (!is_num(*cur_char)){
         printf("invalid date, date should be of format MM-DD-YY\n");
         return 0;
       }
-    } else if (!is_dash_slash(*str))
+    } else if (!is_dash_slash(*cur_char))
     {
       printf("invalid date, date should be of format MM-DD-YY\n");
       return 0;
     }
 
   }
+
+  int month;
+  int day;
+  int year;
+
+  month = strn_to_int(str, 2);
+  if (month < 1 || month > 12)
+  {
+    printf("Error: %d is not a valid month\n", month);
+    return 0;
+  } else
+  {
+    printf("%d is a valid month\n", month);
+  }
+
+  year = strn_to_int(str + 6, 2) + 2000;
+
+  day = strn_to_int(str + 3, 2);
+
+  switch (month) //check if the day of the month is valid
+  {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+
+      if (day > 31 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return 0;
+      }
+      break;
+
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+      if (day > 30 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return 0;
+      }
+      break;
+
+    case 2:
+      if (!(year % 4)){
+        if (day > 29 || day < 1)
+        {
+          printf("%d is not a valid day in month %d of a leap year\n", day, month);
+          return 0;
+        }
+      } else
+      {
+        if (day > 28 || day < 1)
+        {
+          printf("%d is not a valid day in month %d of a non-leap year\n", day, month);
+          return 0;
+        }
+      }
+      break;
+
+    default:
+      break;
+  }
+  return 1;
 }
 
 void print_date(struct tm * date, int display_time){
