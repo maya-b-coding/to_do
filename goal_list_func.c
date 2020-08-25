@@ -128,23 +128,21 @@ void free_parsed_args(char **argv)
   }
 }
 
-void add_goal(char ** argv, int argc)
+void add_goal(char ** argv, int argc, goal goal_array[], int * array_index)
 {
-  printf("adding goal\n");
 
   goal my_goal;
 
   if (argc > 2)
   {
-    struct tm * date = NULL;
-    date = string_to_date(argv[2]);
-    if (date != NULL)
+    if (is_date(argv[2]))
     {
-      my_goal = create_goal(argv[1], *date, 1);
-      free(date);
+      struct tm date = string_to_date(argv[2]);
+      my_goal = create_goal(argv[1], date, 1);
+
     } else
     {
-      printf("Date is NULL\n");
+      printf("Date is invalid, no goal created\n");
       return; //eror when converting the date
     }
   }
@@ -155,16 +153,20 @@ void add_goal(char ** argv, int argc)
   } else
   {
     printf("invalid input: not enough arguments\n");
+    printf("Command usage: add \"Goal Title\" <date>\n");
+    return;
   }
 
-  printf("my_goal.name = %s\n", my_goal.name);
+  goal_array[*array_index] = my_goal;
+  (*array_index)++;
 }
 
 goal create_goal(char * name, struct tm target_date, int has_target)
 {
   goal new_goal;
 
-  new_goal.name = name;
+  new_goal.name = malloc(strlen(name) + 1);
+  strcpy(new_goal.name, name);
   new_goal.has_target = (char) has_target;
   new_goal.is_completed = 0;
   new_goal.is_expired = 0;
@@ -183,94 +185,19 @@ goal create_goal(char * name, struct tm target_date, int has_target)
   return new_goal;
 }
 
-struct tm * string_to_date(char * str)
+struct tm string_to_date(char * str)
 {
-  if (!is_date(str))
-  {
-    printf("date enterred INCORRECTLY!\n");
-    return NULL;
-  }
-
+  //we assume this string has already been tested and shown to be valid
   int month;
   int day;
   int year;
 
   month = strn_to_int(str, 2);
-  if (month < 1 || month > 12)
-  {
-    printf("Error: %d is not a valid month\n", month);
-    return NULL;
-  }
-
   year = strn_to_int(str + 6, 2) + 2000;
-
   day = strn_to_int(str + 3, 2);
 
-  switch (month) //check if the day of the month is valid
-  {
-    case 1:
-    case 3:
-    case 5:
-    case 7:
-    case 8:
-    case 10:
-    case 12:
-
-      if (day > 31 || day < 1)
-      {
-        printf("%d is not a valid day in month %d\n", day, month);
-        return NULL;
-      }
-      break;
-
-    case 4:
-    case 6:
-    case 9:
-    case 11:
-      if (day > 30 || day < 1)
-      {
-        printf("%d is not a valid day in month %d\n", day, month);
-        return NULL;
-      }
-      break;
-
-    case 2:
-      if (!(year % 4)){
-        if (day > 29 || day < 1)
-        {
-          printf("%d is not a valid day in month %d of a leap year\n", day, month);
-          printf("year = %d\n", year);
-          return NULL;
-        }
-      } else
-      {
-        if (day > 28 || day < 1)
-        {
-          printf("%d is not a valid day in month %d of a non-leap year\n", day, month);
-          printf("year = %d\n", year);
-          return NULL;
-        }
-      }
-      break;
-
-    default:
-      break;
-  }
-
-  struct tm new_date;
-  printf("valid date good job\n");
-
-  new_date.tm_sec = 0;
-  new_date.tm_min = 0;
-  new_date.tm_hour = 0;
-  new_date.tm_mday = day;
-  new_date.tm_mon = month - 1;
-  new_date.tm_year = year - 1900;
-
-  new_date.tm_wday = 0;
-  new_date.tm_yday = 0;
-
-  return NULL;
+  struct tm new_date = create_date(month, day, year);
+  return new_date;
 }
 
 int get_wday(int month, int day, int year){
@@ -431,20 +358,81 @@ int is_date(char * str)
     if ((i + 1) % 3 != 0)
     {
       if (!is_num(*str)){
-        printf("i = %d\n", i);
-        printf("%c is not a num\n", *str);
         printf("invalid date, date should be of format MM-DD-YY\n");
         return 0;
       }
     } else if (!is_dash_slash(*str))
     {
-      printf("i = %d\n", i);
-      printf("%c is not a dash\n", *str);
       printf("invalid date, date should be of format MM-DD-YY\n");
       return 0;
     }
 
   }
+
+  int month;
+  int day;
+  int year;
+
+  month = strn_to_int(str, 2);
+  if (month < 1 || month > 12)
+  {
+    printf("Error: %d is not a valid month\n", month);
+    return 0;
+  }
+
+  year = strn_to_int(str + 6, 2) + 2000;
+
+  day = strn_to_int(str + 3, 2);
+
+  switch (month) //check if the day of the month is valid
+  {
+    case 1:
+    case 3:
+    case 5:
+    case 7:
+    case 8:
+    case 10:
+    case 12:
+
+      if (day > 31 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return 0;
+      }
+      break;
+
+    case 4:
+    case 6:
+    case 9:
+    case 11:
+      if (day > 30 || day < 1)
+      {
+        printf("%d is not a valid day in month %d\n", day, month);
+        return 0;
+      }
+      break;
+
+    case 2:
+      if (!(year % 4)){
+        if (day > 29 || day < 1)
+        {
+          printf("%d is not a valid day in month %d of a leap year\n", day, month);
+          return 0;
+        }
+      } else
+      {
+        if (day > 28 || day < 1)
+        {
+          printf("%d is not a valid day in month %d of a non-leap year\n", day, month);
+          return 0;
+        }
+      }
+      break;
+
+    default:
+      break;
+  }
+  return 1;
 }
 
 int strn_to_int(char * str, int n)
@@ -462,4 +450,21 @@ int strn_to_int(char * str, int n)
   copied_str[i] = '\0';
 
   return atoi(copied_str);
+}
+
+void print_goal(goal cur_goal)
+{
+  printf("Goal: %s", cur_goal.name);
+  if (cur_goal.has_target)
+  {
+    printf(" - Target Date: ");
+    print_date(&cur_goal.date_target, 0); //default to not showing time
+  }
+  printf("\n");
+}
+
+void free_goal_name(goal g)
+{
+  free(g.name);
+  g.name = NULL;
 }

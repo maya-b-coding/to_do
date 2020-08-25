@@ -17,7 +17,8 @@ typedef struct{
 
 void check_errors(int error_status);
 void print_date(struct tm * date, int display_time);
-void add_goal(char ** argv, int argc);
+void add_goal(char ** argv, int argc, goal goal_array[], int * array_index);
+void free_goal_name(goal g); //frees the name string within each goal
 int print_current_goals();
 int print_past_goals();
 int print_all_goals(); // is this function really necessary?
@@ -27,8 +28,9 @@ int is_num(char c);
 int is_dash_slash(char c);
 int is_date(char * str);
 int strn_to_int(char * str, int n);
+void print_goal(goal new_goal);
 
-struct tm * string_to_date(char * str);
+struct tm string_to_date(char * str);
 goal create_goal(char * name, struct tm target_date, int has_target);
 struct tm create_date(int month, int day, int year);
 int get_wday(int month, int day, int year);
