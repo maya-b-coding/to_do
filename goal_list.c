@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <goal_list.h>
+#include <date_and_time.h>
 
 #define MAX_INPUT 500
 #define ARRAY_SIZE 100
