@@ -20,14 +20,7 @@ int print_current_goals(){
   return 0;
 }
 
-void print_date(struct tm * date, int display_time){
-  char * format_type = display_time == 0 ? DATE_NO_TIME : DATE_W_TIME;
-  char date_string [MAX_CHARS];
 
-  strftime(date_string, MAX_CHARS, format_type, date); //can i drop the size_t?
-
-  printf("%s\n", date_string);
-}
 
 char **parse_args(char * arguments, int *argc)
 {
@@ -189,7 +182,8 @@ void print_goal(goal cur_goal)
   if (cur_goal.has_target)
   {
     printf(" - Target Date: ");
-    print_date(&cur_goal.date_target, 0); //default to not showing time
+    char * date_str =date_to_str()&cur_goal.date_target, 0)//default to not showing time
+    printf("%s", date_str); 
   }
   printf("\n");
 }

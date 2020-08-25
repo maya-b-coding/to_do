@@ -5,7 +5,8 @@ const int MAX_CHARS;
 char * DATE_NO_TIME;
 char * DATE_W_TIME;
 
-void print_date(struct tm * date, int display_time);
+char * date_to_str(struct tm * date, int display_time);
+
 void print_goal_array(goal array[], int size);
 
 int is_num(char c);

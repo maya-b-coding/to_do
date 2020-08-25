@@ -65,6 +65,15 @@ int is_date(char * str)
   }
 }
 
+char * date_to_str(struct tm * date, int display_time){
+  char * format_type = display_time == 0 ? DATE_NO_TIME : DATE_W_TIME;
+  char date_string [MAX_CHARS];
+
+  strftime(date_string, MAX_CHARS, format_type, date); //can i drop the size_t?
+
+  return date_string;
+}
+
 int get_wday(int month, int day, int year)
 {
   int wday = year % 100;
