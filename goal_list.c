@@ -139,6 +139,21 @@ int main()
             add_element(&completed_goals, &completed_goals_max_size, &completed_goals_size, removed);
           }
         }
+      } else if (strcmp(command, "renew") == 0 || strcmp(command, "r") == 0){
+        if (argc < 2)
+        {
+          printf("Invalid input. Syntax for renew command should read \"renew <index>\"");
+        } else {
+          int index = atoi(argv[1]);
+          if (index < 0 || index >= completed_goals_size)
+          {
+            printf("Erorr: %d is not a valid index in the completed goals array.\n", index);
+          } else {
+            goal removed = completed_goals[index];
+            remove_element(completed_goals, &completed_goals_size, index);
+            add_element(&current_goals, &current_goals_max_size, &current_goals_size, removed);
+          }
+        }
       } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         break;
