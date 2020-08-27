@@ -156,13 +156,15 @@ void set_date_target(goal * array, int index, char * date_str)
 {
   if (strcmp(date_str, "none") == 0){
     array[index].has_target = 0;
+    printf("Target date for goal [%d] removed\n", index);
   }
   else if (is_date(date_str))
   {
     struct tm date = string_to_date(date_str);
     array[index].has_target = 1;
     array[index].date_target = date;
-  } 
+    printf("Target date for goal [%d] changed\n", index);
+  }
 }
 
 int get_target_array(char * target_str)
