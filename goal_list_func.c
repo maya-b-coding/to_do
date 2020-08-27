@@ -124,12 +124,12 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
 
   goal my_goal;
 
-  if (argc > 2)
+  if (argc > 3)
   {
-    if (is_date(argv[2]))
+    if (is_date(argv[3]))
     {
-      struct tm date = string_to_date(argv[2]);
-      my_goal = create_goal(argv[1], date, 1);
+      struct tm date = string_to_date(argv[3]);
+      my_goal = create_goal(argv[2], date, 1);
 
     } else
     {
@@ -137,19 +137,32 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
       return; //eror when converting the date
     }
   }
-  else if (argc > 1)
+  else if (argc > 2)
   {
     struct tm empty_date;
-    my_goal = create_goal(argv[1], empty_date, 0);
+    my_goal = create_goal(argv[2], empty_date, 0);
 
   } else
   {
     printf("invalid input: not enough arguments\n");
-    printf("Command usage: add \"Goal Title\" <date>\n");
+    printf("Command usage: add \"Goal Title\" <target_array> <date>\n");
     return;
   }
 
   add_element(goal_array_ptr, array_max_size, array_index, my_goal);
+}
+
+int get_target_array(char * target_str)
+{
+  if (strcmp(target_str, "g") == 0 || strcmp(target_str, "goal") == 0)
+  {
+    return 0;
+  } else if (strcmp(target_str, "c") == 0 || strcmp(target_str, "complete") == 0)
+  {
+    return 1;
+  } else {
+    return -1;
+  }
 }
 
 goal create_goal(char * name, struct tm target_date, int has_target)

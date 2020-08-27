@@ -20,5 +20,7 @@ void free_parsed_args(char **argv);
 void print_goal(goal new_goal);
 void print_goal_array(goal * array, int size);
 
+int get_target_array(char * target_str);
+
 goal create_goal(char * name, struct tm target_date, int has_target);
 #endif
