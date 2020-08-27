@@ -60,7 +60,6 @@ int is_dash_slash(char c)
 
 int is_date(char * str)
 {
-  printf("is date is running\n");
   if (strlen(str) != 8)
   {
     printf("invalid date length, date should be of format MM-DD-YY\n");
@@ -94,10 +93,7 @@ int is_date(char * str)
   {
     printf("Error: %d is not a valid month\n", month);
     return 0;
-  } else
-  {
-    printf("%d is a valid month\n", month);
-  }
+  } 
 
   year = strn_to_int(str + 6, 2) + 2000;
 

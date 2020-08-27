@@ -1,11 +1,12 @@
-#include <stdlib.h>
 #include <stdio.h>
-#include <goal_list.h>
-#include <dynamic_arrays.h>
+#include <stdlib.h>
+#include <time.h>
+#include "goal_list.h"
+#include "dynamic_arrays.h"
 
-goal new_array[] (int max_size)
+goal * new_array (int max_size)
 {
-  goal array [] = malloc(max_size * sizeof(goal));
+  goal * array = malloc(max_size * sizeof(goal));
 
   if (array == NULL)
   {
@@ -16,35 +17,36 @@ goal new_array[] (int max_size)
   return array;
 }
 
-goal double_array_size(goal old_array[], int * max_size)
+void double_array_size (goal ** old_array_ptr, int * max_size)
 {
-  goal new_array[] = malloc((*max_size * 2) * sizeof(goal)); //make sure this is set up correctly later
+  goal * old_array = *old_array_ptr;
+  goal * array = new_array((*max_size) + 20); //make sure this is set up correctly later
 
-  if (new_array == NULL)
+  if (array == NULL)
   {
     printf("Error allocating array of double size\n");
-    return NULL;
+    return;
   }
 
-  for (int i = 0; i < max_size; i++) //copy elements into the new array
+  for (int i = 0; i < *max_size; i++) //copy elements into the new array
   {
-    new_array[i] = old_array[i];
+    array[i] = old_array[i];
   }
 
-  *max_size = *max_size * 2;
+  *max_size = (*max_size) * 2;
   free(old_array);
-  return new_array;
+  *old_array_ptr = array;
 }
 
-void add_element(goal array[], int *  max_size, int * size, goal element)
+void add_element(goal ** array_ptr, int *  max_size, int * size, goal element)
 {
-
   if (*size >= *max_size)
   {
-    array = double_array_size(array,max_size);
+    double_array_size(array_ptr, max_size);
   }
 
-  array[size] = element;
+  goal * array = *array_ptr;
+  array[*size] = element;
 
   *size = *size + 1;
 }

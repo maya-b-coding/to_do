@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <goal_list.h>
-#include <date_and_time.h>
+#include "goal_list.h"
+#include "date_and_time.h"
+#include "dynamic_arrays.h"
 
 void check_errors(int error_status)
 {
@@ -118,7 +119,7 @@ void free_parsed_args(char **argv)
   }
 }
 
-void add_goal(char ** argv, int argc, goal goal_array[], int * array_index)
+void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index, int * array_max_size)
 {
 
   goal my_goal;
@@ -140,7 +141,7 @@ void add_goal(char ** argv, int argc, goal goal_array[], int * array_index)
   {
     struct tm empty_date;
     my_goal = create_goal(argv[1], empty_date, 0);
-    printf("Debug: Goal added succesfully!\n");
+
   } else
   {
     printf("invalid input: not enough arguments\n");
@@ -148,8 +149,7 @@ void add_goal(char ** argv, int argc, goal goal_array[], int * array_index)
     return;
   }
 
-  goal_array[*array_index] = my_goal;
-  (*array_index)++;
+  add_element(goal_array_ptr, array_max_size, array_index, my_goal);
 }
 
 goal create_goal(char * name, struct tm target_date, int has_target)
@@ -178,13 +178,22 @@ goal create_goal(char * name, struct tm target_date, int has_target)
 
 void print_goal(goal cur_goal)
 {
-  printf("Goal: %s", cur_goal.name);
+  printf("%s", cur_goal.name);
   if (cur_goal.has_target)
   {
     printf(" - Target Date: ");
     print_date(&cur_goal.date_target, 0); //default to not showing time
   }
   printf("\n");
+}
+
+void print_goal_array(goal * array, int size)
+{
+  for (int i = 0; i < size; i++)
+  {
+    printf("[%d] - ", i);
+    print_goal(array[i]);
+  }
 }
 
 void free_goal_name(goal g)
