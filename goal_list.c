@@ -152,6 +152,7 @@ int main()
           {
             printf("Erorr: %d is not a valid index in the completed goals array.\n", index);
           } else {
+            renew_goal(completed_goals, index);
             goal removed = completed_goals[index];
             remove_element(completed_goals, &completed_goals_size, index);
             add_element(&current_goals, &current_goals_max_size, &current_goals_size, removed);

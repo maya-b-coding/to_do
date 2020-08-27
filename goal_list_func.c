@@ -185,6 +185,11 @@ void complete_goal(goal * array, int index)
   array[index].date_completed = *localtime(&rawtime);
 }
 
+void renew_goal(goal * array, int index)
+{
+  array[index].is_completed = 0;
+}
+
 int get_target_array(char * target_str)
 {
   if (strcmp(target_str, "g") == 0 || strcmp(target_str, "goal") == 0)

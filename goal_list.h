@@ -22,6 +22,7 @@ void print_goal_array(goal * array, int size);
 void set_date_target(goal * array, int index, char * date_str);
 void set_name(goal * array, int index, char * new_name);
 void complete_goal(goal * array, int index);
+void renew_goal(goal * array, int index);
 
 int get_target_array(char * target_str);
 
