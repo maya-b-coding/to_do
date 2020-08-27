@@ -14,3 +14,6 @@ run:
 
 run_goal_list:
 	./goal_list
+
+test:
+	$(CC) -g -o goal_list goal_list.c goal_list_func.c dynamic_arrays.c date_and_time.c

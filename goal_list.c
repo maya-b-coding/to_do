@@ -57,6 +57,7 @@ int main()
               break;
             default:
               printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+              break;
           }
         }
 
@@ -81,32 +82,56 @@ int main()
             break;
           default:
             printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+            break;
         }
       }
 
-      } else if (strcmp(command, "delete_goal") == 0 || strcmp(command, "dg") == 0)
+      } else if (strcmp(command, "delete") == 0 || strcmp(command, "d") == 0)
       {
+        {if (argc < 2)
+        {
+          printf("Please specify a target array in your second argument. Type c/complete for completed goals, or g/goals for current goals.\n");
+        } else if (argc < 3){
+          printf("Invalid input. Syntax for delete command should read \"delete <target_array> <index>\n");
+        } else {
+            int index = atoi(argv[2]);
+            switch (get_target_array(argv[1]))
+            {
+              case 0:
+                if (index < 0 || index >= current_goals_size)
+                {
+                  printf("Error: %d is not a valid index in the current goals array.\n", index);
+                } else {
+                  printf("Goal [%d] - \"%s\" deleted from current goals array\n", index, current_goals[goal_index].name);
+                  remove_element(current_goals, &current_goals_size, index);
+                }
+                break;
+              case 1:
+                if (index < 0 || index >= completed_goals_size)
+                {
+                  printf("Error: %d is not a valid index in the completed goals array.\n", index);
+                } else {
+                  printf("Goal [%d] - \"%s\" deleted from completed goals array\n", index, completed_goals[index].name);
+                  remove_element(completed_goals, &completed_goals_size, index);
+                }
+                break;
+              default:
+                printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+                break;
+            }
+          }
 
-      } else if (strcmp(command, "delete_complete") == 0 || strcmp(command, "dc") == 0)
+        }
+      } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
-
+        break;
       }
 
-      else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
-      {
-        free_parsed_args(argv);
-        return 0;
-      }
     }
-
-  /*  for (int i = 0; i < argc; i++)
-    {
-      printf("%s\n", argv[i]);
-    }*/
 
     free_parsed_args(argv);
 
-  } while (strncmp(input, "exit", 4) != 0);
+  } while (1);
 
   //free all used memory
 
