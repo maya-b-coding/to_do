@@ -152,6 +152,19 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
   add_element(goal_array_ptr, array_max_size, array_index, my_goal);
 }
 
+void set_date_target(goal * array, int index, char * date_str)
+{
+  if (strcmp(date_str, "none") == 0){
+    array[index].has_target = 0;
+  }
+  else if (is_date(date_str))
+  {
+    struct tm date = string_to_date(date_str);
+    array[index].has_target = 1;
+    array[index].date_target = date;
+  } 
+}
+
 int get_target_array(char * target_str)
 {
   if (strcmp(target_str, "g") == 0 || strcmp(target_str, "goal") == 0)
@@ -173,7 +186,6 @@ goal create_goal(char * name, struct tm target_date, int has_target)
   strcpy(new_goal.name, name);
   new_goal.has_target = (char) has_target;
   new_goal.is_completed = 0;
-  new_goal.is_expired = 0;
 
   if (has_target)
   {

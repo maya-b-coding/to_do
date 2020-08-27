@@ -8,7 +8,6 @@ typedef struct{
   char * name;
   char has_target; //boolean telling whether a target date is set
   char is_completed; //boolean that tells if it's been completed or not
-  char is_expired; //true if the date_target has been passed but still hasn't been completed
 } goal;
 
 void check_errors(int error_status);
@@ -19,6 +18,7 @@ char **parse_args(char * arguments, int *argc);
 void free_parsed_args(char **argv);
 void print_goal(goal new_goal);
 void print_goal_array(goal * array, int size);
+void set_date_target(goal * array, int index, char * date_str);
 
 int get_target_array(char * target_str);
 

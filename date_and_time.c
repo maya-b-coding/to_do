@@ -62,7 +62,7 @@ int is_date(char * str)
 {
   if (strlen(str) != 8)
   {
-    printf("invalid date length, date should be of format MM-DD-YY\n");
+    printf("invalid date, date should be of format MM-DD-YY\n");
     return 0;
   }
 
@@ -93,7 +93,7 @@ int is_date(char * str)
   {
     printf("Error: %d is not a valid month\n", month);
     return 0;
-  } 
+  }
 
   year = strn_to_int(str + 6, 2) + 2000;
 

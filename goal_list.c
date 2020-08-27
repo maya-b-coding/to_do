@@ -126,7 +126,7 @@ int main()
       {
         if (argc < 2)
         {
-          printf("Invalid input. Syntax for complete command should read \"complete <index>\"");
+          printf("Invalid input. Syntax for complete command should read \"complete <index>\"\n");
         } else
         {
           int index = atoi(argv[1]);
@@ -142,7 +142,7 @@ int main()
       } else if (strcmp(command, "renew") == 0 || strcmp(command, "r") == 0){
         if (argc < 2)
         {
-          printf("Invalid input. Syntax for renew command should read \"renew <index>\"");
+          printf("Invalid input. Syntax for renew command should read \"renew <index>\"\n");
         } else {
           int index = atoi(argv[1]);
           if (index < 0 || index >= completed_goals_size)
@@ -154,9 +154,45 @@ int main()
             add_element(&current_goals, &current_goals_max_size, &current_goals_size, removed);
           }
         }
+      } else if (strcmp(command, "change_target_date") == 0 || strcmp(command, "ctd") == 0)
+      {
+        if (argc < 4)
+        {
+          printf("Invalid input. Syntax for change_target_date command should read \"change_target_date <target_array> <index> <date>\"\n");
+        } else
+        {
+          int index = atoi(argv[2]);
+          switch (get_target_array(argv[1]))
+          {
+            case 0:
+              if (index < 0 || index >= current_goals_size)
+              {
+                printf("Error: %d is not a valid index in the current goals array.\n", index);
+              } else
+              {
+                set_date_target(current_goals, index, argv[3]);
+              }
+              break;
+            case 1:
+              if (index < 0 || index >= completed_goals_size)
+              {
+                printf("Error: %d is not a valid index in the completed goals array.\n", index);
+              } else
+              {
+                set_date_target(completed_goals, index, argv[3]);
+              }
+              break;
+            default:
+              printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+              break;
+          }
+        }
+
       } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         break;
+      } else {
+        printf("Invalid command. type help for a list of commands.\n");
       }
 
     }
