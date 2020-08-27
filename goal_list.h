@@ -19,6 +19,7 @@ void free_parsed_args(char **argv);
 void print_goal(goal new_goal);
 void print_goal_array(goal * array, int size);
 void set_date_target(goal * array, int index, char * date_str);
+void set_name(goal * array, int index, char * new_name);
 
 int get_target_array(char * target_str);
 

@@ -167,6 +167,15 @@ void set_date_target(goal * array, int index, char * date_str)
   }
 }
 
+void set_name(goal * array, int index, char * new_name)
+{
+  char * old_name = array[index].name;
+  array[index].name = malloc(strlen(new_name) + 1); //dynamically allocated copy of new_name
+  strcpy(array[index].name, new_name);
+  printf("Goal [%d] changed from \"%s\" to \"%s\"\n", index, old_name, new_name);
+  free(old_name);
+}
+
 int get_target_array(char * target_str)
 {
   if (strcmp(target_str, "g") == 0 || strcmp(target_str, "goal") == 0)

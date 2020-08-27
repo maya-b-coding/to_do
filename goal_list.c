@@ -188,6 +188,38 @@ int main()
           }
         }
 
+      } else if (strcmp(command, "change_name") == 0 || strcmp(command, "cn") == 0)
+      {
+        if (argc < 4)
+        {
+          printf("Invalid input. Syntax for change_name command should read \"change_name <target_array> <index> <new_name>\"\n");
+        } else {
+          int index = atoi(argv[2]);
+          switch (get_target_array(argv[1]))
+          {
+            case 0:
+              if (index < 0 || index >= current_goals_size)
+              {
+                printf("Error: %d is not a valid index in the current goals array.\n", index);
+              } else
+              {
+                set_name(current_goals, index, argv[3]);
+              }
+              break;
+            case 1:
+              if (index < 0 || index >= completed_goals_size)
+              {
+                printf("Error: %d is not a valid index in the completed goals array.\n", index);
+              } else
+              {
+                set_name(completed_goals, index, argv[3]);
+              }
+              break;
+            default:
+              printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+              break;
+          }
+        }
       } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         break;
