@@ -40,18 +40,14 @@ int main()
     {
       char * command = argv[0];
       char * target_str = NULL;
-      if (argc > 1)
-      {
-        target_str = argv[1];
-      }
 
       if ((strcmp(command, "add")) == 0 || (strcmp(command, "a") == 0))
       {
-        if (target_str == NULL)
+        if (argc <= 1)
         {
           printf("Please specify a target array in your second argument. Type c/complete for completed goals, or g/goals for current goals.\n");
         } else {
-          switch (get_target_array(target_str))
+          switch (get_target_array(argv[1]))
           {
             case 0:
               add_goal(argv, argc, &current_goals, &current_goals_size, &current_goals_max_size);
@@ -68,16 +64,26 @@ int main()
       {
         int wday = get_wday(atoi(argv[1]), atoi(argv[2]), atoi(argv[3]));
         printf("weekday = %d\n", wday);
-      } else if (strcmp(command, "show_goals") == 0 || strcmp(argv[0], "sg") == 0)
+      } else if (strcmp(command, "show") == 0 || strcmp(argv[0], "s") == 0)
+      {if (argc <= 1)
       {
-        printf("Current goals:\n");
+        printf("Please specify a target array in your second argument. Type c/complete for completed goals, or g/goals for current goals.\n");
+      } else {
+        switch (get_target_array(argv[1]))
+        {
+          case 0:
+            printf("Current goals:\n");
+            print_goal_array(current_goals, current_goals_size);
+            break;
+          case 1:
+            printf("Completed goals:\n");
+            print_goal_array(completed_goals, completed_goals_size);
+            break;
+          default:
+            printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
+        }
+      }
 
-        print_goal_array(current_goals, current_goals_size);
-      } else if (strcmp(command, "show_complete") == 0 || strcmp(argv[0], "sc") == 0)
-      {
-        printf("Completed goals:\n");
-
-        print_goal_array(completed_goals, completed_goals_size);
       } else if (strcmp(command, "delete_goal") == 0 || strcmp(command, "dg") == 0)
       {
 
@@ -86,7 +92,7 @@ int main()
 
       }
 
-      else if (strcmp(command, "exit") == 0)
+      else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         free_parsed_args(argv);
         return 0;
