@@ -122,6 +122,23 @@ int main()
           }
 
         }
+      }  else if (strcmp(command, "complete") == 0 || strcmp(command, "c") == 0)
+      {
+        if (argc < 2)
+        {
+          printf("Invalid input. Syntax for complete command should read \"complete <index>\"");
+        } else
+        {
+          int index = atoi(argv[1]);
+          if (index < 0 || index >= current_goals_size)
+          {
+            printf("Error: %d is not a valid index in the current goals array.\n", index);
+          } else {
+            goal removed = current_goals[index];
+            remove_element(current_goals, &current_goals_size, index);
+            add_element(&completed_goals, &completed_goals_max_size, &completed_goals_size, removed);
+          }
+        }
       } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         break;
