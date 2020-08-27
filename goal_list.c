@@ -54,6 +54,7 @@ int main()
               break;
             case 1:
               add_goal(argv, argc, &completed_goals, &completed_goals_size, &completed_goals_max_size);
+              complete_goal(completed_goals, completed_goals_size - 1);
               break;
             default:
               printf("Invalid target array. Type c/complete for completed goals, or g/goals for current goals.\n");
@@ -134,9 +135,11 @@ int main()
           {
             printf("Error: %d is not a valid index in the current goals array.\n", index);
           } else {
+            complete_goal(current_goals, index);
             goal removed = current_goals[index];
             remove_element(current_goals, &current_goals_size, index);
             add_element(&completed_goals, &completed_goals_max_size, &completed_goals_size, removed);
+
           }
         }
       } else if (strcmp(command, "renew") == 0 || strcmp(command, "r") == 0){
@@ -196,6 +199,7 @@ int main()
         } else {
           int index = atoi(argv[2]);
           switch (get_target_array(argv[1]))
+
           {
             case 0:
               if (index < 0 || index >= current_goals_size)

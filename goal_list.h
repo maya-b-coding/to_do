@@ -7,6 +7,7 @@ typedef struct{
   struct tm date_completed;
   char * name;
   char has_target; //boolean telling whether a target date is set
+  char show_time; //whether to show the exact times of completeion and target
   char is_completed; //boolean that tells if it's been completed or not
 } goal;
 
@@ -20,6 +21,7 @@ void print_goal(goal new_goal);
 void print_goal_array(goal * array, int size);
 void set_date_target(goal * array, int index, char * date_str);
 void set_name(goal * array, int index, char * new_name);
+void complete_goal(goal * array, int index);
 
 int get_target_array(char * target_str);
 

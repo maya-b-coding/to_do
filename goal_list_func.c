@@ -176,6 +176,15 @@ void set_name(goal * array, int index, char * new_name)
   free(old_name);
 }
 
+void complete_goal(goal * array, int index)
+{
+  time_t rawtime;
+  time(&rawtime);
+
+  array[index].is_completed = 1;
+  array[index].date_completed = *localtime(&rawtime);
+}
+
 int get_target_array(char * target_str)
 {
   if (strcmp(target_str, "g") == 0 || strcmp(target_str, "goal") == 0)
@@ -208,6 +217,7 @@ goal create_goal(char * name, struct tm target_date, int has_target)
   time_t rawtime;
   time(&rawtime);
   new_goal.date_set = *localtime(&rawtime);
+  new_goal.show_time = 0;
 
   return new_goal;
 }
@@ -219,6 +229,11 @@ void print_goal(goal cur_goal)
   {
     printf(" - Target Date: ");
     print_date(&cur_goal.date_target, 0); //default to not showing time
+  }
+  if (cur_goal.is_completed)
+  {
+    printf(" - Completed: ");
+    print_date(&cur_goal.date_completed, 0);
   }
   printf("\n");
 }
