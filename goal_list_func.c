@@ -258,7 +258,29 @@ void print_goal(goal cur_goal)
   {
     printf(" - Target Date: ");
     print_date(&cur_goal.date_target, cur_goal.has_target_time); //default to not showing time
+    if (!cur_goal.is_completed)
+    {
+      time_t rawtime;
+      struct tm * cur_date;
+
+      time(&rawtime);
+      cur_date = localtime(&rawtime);
+
+      int cmp;
+      if (cur_goal.has_target_time)
+      {
+        cmp = cmp_dates_w_time(&cur_goal.date_target, cur_date);
+      } else {
+        cmp = cmp_dates(&cur_goal.date_target, cur_date);
+      }
+
+      if (cmp > 0)
+      {
+        printf(" (EXPIRED)");
+      }
+    }
   }
+
   if (cur_goal.is_completed)
   {
     printf(" - Completed: ");

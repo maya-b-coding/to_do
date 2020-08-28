@@ -17,6 +17,8 @@ int is_time(char * str);
 int strn_to_int(char * str, int n);
 int get_wday(int month, int day, int year);
 int get_yday(int month, int day, int year);
+int cmp_dates(struct tm * date_1, struct tm * date_2);
+int cmp_dates_w_time(struct tm * date_1, struct tm * date_2);
 
 struct tm string_to_date(char * str);
 struct tm string_to_date_w_time(char * date_str, char * time_str);

@@ -321,6 +321,63 @@ struct tm create_date(int month, int day, int year)
 
 }
 
+int cmp_dates(struct tm * date_1, struct tm * date_2)
+{ //return 1 if date_2 is later, 0 if equal, or -1 if date_1 is later
+
+  if (date_2->tm_year > date_1->tm_year){
+    return 1;
+  } else if (date_2->tm_year == date_1->tm_year)
+  {
+    if (date_2->tm_yday > date_1->tm_yday)
+    {
+      return 1;
+    } else if (date_2->tm_yday == date_1->tm_yday)
+    {
+      return 0;
+    } else {
+      return -1;
+    }
+  } else {
+    return -1;
+  }
+}
+
+int cmp_dates_w_time(struct tm * date_1, struct tm * date_2)
+{
+  if (date_2->tm_year > date_1->tm_year){
+    return 1;
+  } else if (date_2->tm_year == date_1->tm_year)
+  {
+    if (date_2->tm_yday > date_1->tm_yday)
+    {
+      return 1;
+    } else if (date_2->tm_yday == date_1->tm_yday)
+    {
+      if (date_2->tm_hour > date_1->tm_hour)
+      {
+        return 1;
+      } else if (date_2->tm_hour == date_1->tm_hour)
+      {
+        if (date_2->tm_min > date_1->tm_min)
+        {
+          return 1;
+        } else if (date_2->tm_min == date_1->tm_min)
+        {
+          return 0;
+        } else {
+          return -1;
+        }
+      } else {
+        return -1;
+      }
+    } else {
+      return -1;
+    }
+  } else {
+    return -1;
+  }
+}
+
 struct tm create_date_w_time(int month, int day, int year, int hour, int minute, int pm)
 {
 
