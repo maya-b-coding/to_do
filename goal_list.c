@@ -174,7 +174,14 @@ int main()
                 printf("Error: %d is not a valid index in the current goals array.\n", index);
               } else
               {
-                set_date_target(current_goals, index, argv[3]);
+                if (argc < 5)
+                {
+                  set_date_target(current_goals, index, argv[3]);
+                } else
+                {
+                  set_date_target_w_time(current_goals, index, argv[3], argv[4]);
+                }
+
               }
               break;
             case 1:
@@ -183,7 +190,14 @@ int main()
                 printf("Error: %d is not a valid index in the completed goals array.\n", index);
               } else
               {
-                set_date_target(completed_goals, index, argv[3]);
+                if (argc < 5)
+                {
+                  set_date_target(completed_goals, index, argv[3]);
+                } else
+                {
+                  set_date_target_w_time(completed_goals, index, argv[3], argv[4]);
+                }
+
               }
               break;
             default:

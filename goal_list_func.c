@@ -124,12 +124,22 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
 
   goal my_goal;
 
-  if (argc > 3)
+  if (argc > 4)
+  {
+    if (is_date(argv[3]) && is_time(argv[4]))
+    {
+      struct tm date = string_to_date_w_time(argv[3], argv[4]);
+      my_goal = create_goal(argv[2], date, 1, 1);
+    } else {
+      printf("Date or time is invalid, no goal created\n");
+      return;
+    }
+  } else if (argc > 3)
   {
     if (is_date(argv[3]))
     {
       struct tm date = string_to_date(argv[3]);
-      my_goal = create_goal(argv[2], date, 1);
+      my_goal = create_goal(argv[2], date, 1, 0);
 
     } else
     {
@@ -140,7 +150,7 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
   else if (argc > 2)
   {
     struct tm empty_date;
-    my_goal = create_goal(argv[2], empty_date, 0);
+    my_goal = create_goal(argv[2], empty_date, 0, 0);
 
   } else
   {
@@ -150,18 +160,33 @@ void add_goal(char ** argv, int argc, goal * goal_array_ptr[], int * array_index
   }
 
   add_element(goal_array_ptr, array_max_size, array_index, my_goal);
+
 }
 
 void set_date_target(goal * array, int index, char * date_str)
 {
   if (strcmp(date_str, "none") == 0){
     array[index].has_target = 0;
+    array[index].has_target_time = 0;
     printf("Target date for goal [%d] removed\n", index);
   }
   else if (is_date(date_str))
   {
     struct tm date = string_to_date(date_str);
     array[index].has_target = 1;
+    array[index].has_target_time = 0;
+    array[index].date_target = date;
+    printf("Target date for goal [%d] changed\n", index);
+  }
+}
+
+void set_date_target_w_time(goal * array, int index, char * date_str, char * time_str)
+{
+  if (is_date(date_str) && is_time(time_str))
+  {
+    struct tm date = string_to_date_w_time(date_str, time_str);
+    array[index].has_target = 1;
+    array[index].has_target_time = 1;
     array[index].date_target = date;
     printf("Target date for goal [%d] changed\n", index);
   }
@@ -203,26 +228,25 @@ int get_target_array(char * target_str)
   }
 }
 
-goal create_goal(char * name, struct tm target_date, int has_target)
+goal create_goal(char * name, struct tm target_date, int has_target, int has_target_time)
 {
   goal new_goal;
 
   new_goal.name = malloc(strlen(name) + 1);
   strcpy(new_goal.name, name);
   new_goal.has_target = (char) has_target;
+  new_goal.has_target_time = has_target_time;
   new_goal.is_completed = 0;
 
   if (has_target)
   {
     new_goal.date_target = target_date;
-
   }
 
   //set date_set to current date
   time_t rawtime;
   time(&rawtime);
   new_goal.date_set = *localtime(&rawtime);
-  new_goal.show_time = 0;
 
   return new_goal;
 }
@@ -233,12 +257,12 @@ void print_goal(goal cur_goal)
   if (cur_goal.has_target)
   {
     printf(" - Target Date: ");
-    print_date(&cur_goal.date_target, 0); //default to not showing time
+    print_date(&cur_goal.date_target, cur_goal.has_target_time); //default to not showing time
   }
   if (cur_goal.is_completed)
   {
     printf(" - Completed: ");
-    print_date(&cur_goal.date_completed, 0);
+    print_date(&cur_goal.date_completed, 1);
   }
   printf("\n");
 }

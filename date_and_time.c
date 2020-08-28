@@ -58,6 +58,15 @@ int is_dash_slash(char c)
   }
 }
 
+int is_colon(char c){
+  if (c == ':')
+  {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 int is_date(char * str)
 {
   if (strlen(str) != 8)
@@ -148,6 +157,44 @@ int is_date(char * str)
       break;
   }
   return 1;
+}
+
+int is_time(char * str)
+{
+  if (strlen(str) != 7)
+  {
+    printf("invalid time, must be of format \"HH:MM(PM/AM)\" - EX: \"04:35PM\"\n");
+    return 0;
+  }
+
+  if (!is_num(str[0]) || !is_num(str[1]) || !is_num(str[3]) || !is_num(str[4]))
+  {
+    printf("invalid time, must be of format \"HH:MM(PM/AM)\" - EX: \"04:35PM\"\n");
+    return 0;
+  }
+
+  int hour = strn_to_int(str, 2);
+  int minute = strn_to_int(str + 3, 2);
+  if (hour < 1 || hour > 12 || minute < 0 || minute > 59)
+  {
+    printf("invalid time, must be of format \"HH:MM(PM/AM)\" - EX: \"04:35PM\"\n");
+    return 0;
+  }
+
+  if (!is_colon(str[2]))
+  {
+    printf("invalid time, must be of format \"HH:MM(PM/AM)\" - EX: \"04:35PM\"\n");
+    return 0;
+  }
+
+  if (strcmp(str + 5, "PM") != 0 && strcmp(str + 5, "AM") != 0)
+  {
+    printf("invalid time, must be of format \"HH:MM(PM/AM)\" - EX: \"04:35PM\"\n");
+    return 0;
+  }
+
+  return 1;
+
 }
 
 void print_date(struct tm * date, int display_time){
@@ -274,6 +321,31 @@ struct tm create_date(int month, int day, int year)
 
 }
 
+struct tm create_date_w_time(int month, int day, int year, int hour, int minute, int pm)
+{
+
+  struct tm new_date;
+
+  new_date.tm_sec = 0;
+  new_date.tm_min = minute;
+  new_date.tm_hour = hour;
+
+  if (pm){
+    new_date.tm_hour += 12;
+  }
+
+  new_date.tm_mday = day;
+  new_date.tm_mon = month - 1;
+  new_date.tm_year = year - 1900;
+
+  new_date.tm_wday = get_wday(month, day, year);
+  new_date.tm_yday = get_yday(month, day, year);
+
+  return new_date;
+
+}
+
+
 struct tm string_to_date(char * str)
 {
   //we assume this string has already been tested and shown to be valid
@@ -286,5 +358,32 @@ struct tm string_to_date(char * str)
   day = strn_to_int(str + 3, 2);
 
   struct tm new_date = create_date(month, day, year);
+  return new_date;
+}
+
+struct tm string_to_date_w_time(char * date_str, char * time_str)
+{
+  int month;
+  int day;
+  int year;
+  int hour;
+  int minute;
+  int pm;
+
+  month = strn_to_int(date_str, 2);
+  year = strn_to_int(date_str + 6, 2) + 2000;
+  day = strn_to_int(date_str + 3, 2);
+
+  hour = strn_to_int(time_str, 2);
+  minute = strn_to_int(time_str + 3, 2);
+
+  if (strcmp(time_str + 5, "PM") == 0)
+  {
+    pm = 1;
+  } else {
+    pm = 0;
+  }
+
+  struct tm new_date = create_date_w_time(month, day, year, hour, minute, pm);
   return new_date;
 }

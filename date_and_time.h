@@ -10,14 +10,18 @@ void print_goal_array(goal array[], int size);
 
 int is_num(char c);
 int is_dash_slash(char c);
+int is_colon(char c);
 int is_date(char * str);
+int is_time(char * str);
 
 int strn_to_int(char * str, int n);
 int get_wday(int month, int day, int year);
 int get_yday(int month, int day, int year);
 
 struct tm string_to_date(char * str);
+struct tm string_to_date_w_time(char * date_str, char * time_str);
 struct tm create_date(int month, int day, int year);
+struct tm create_date_w_time(int month, int day, int year, int hour, int minute, int pm);
 
 
 #endif
