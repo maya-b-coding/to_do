@@ -444,3 +444,31 @@ struct tm string_to_date_w_time(char * date_str, char * time_str)
   struct tm new_date = create_date_w_time(month, day, year, hour, minute, pm);
   return new_date;
 }
+
+// File IO
+
+void read_date(struct tm * date, FILE * ifp)
+{
+  date->tm_sec = getw(ifp);
+  date->tm_min = getw(ifp);
+  date->tm_hour = getw(ifp);
+  date->tm_mday = getw(ifp);
+  date->tm_mon = getw(ifp);
+  date->tm_year = getw(ifp);
+  date->tm_wday = getw(ifp);
+  date->tm_yday = getw(ifp);
+  date->tm_isdst = getw(ifp);
+}
+
+void write_date(struct tm * date, FILE * ofp)
+{
+  putw(date->tm_sec, ofp);
+  putw(date->tm_min, ofp);
+  putw(date->tm_hour, ofp);
+  putw(date->tm_mday, ofp);
+  putw(date->tm_mon, ofp);
+  putw(date->tm_year, ofp);
+  putw(date->tm_wday, ofp);
+  putw(date->tm_yday, ofp);
+  putw(date->tm_isdst, ofp);
+}

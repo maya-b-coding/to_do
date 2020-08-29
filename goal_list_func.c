@@ -303,3 +303,42 @@ void free_goal_name(goal g)
   free(g.name);
   g.name = NULL;
 }
+
+//File IO
+
+void read_goal(goal * g, FILE * ifp)
+{
+  //read dates
+  read_date(g->date_set, ifp);
+  read_date(g->date_target, ifp);
+  read_date(g->date_completed, ifp);
+
+  //read name and its length
+  int len = getw(ifp);
+
+  g->name = malloc(len + 1);
+  fgets(g->name, len + 1, ifp);
+
+  //read booleans
+  g->has_target = getc(ifp);
+  g->has_target_time = getc(ifp);
+  g->is_completed = getc(ifp);
+}
+
+void write_goal(goal * g, FILE * ofp)
+{
+  //write dates
+  write_date(g->date_set, ofp);
+  write_date(g->date_target, ofp);
+  write_date(g->date_completed, ofp);
+
+  //write name and its length
+  int len = strlen(g->name);
+  putw(len, ofp);
+  fputs(g->name, ofp);
+
+  //write booleans
+  putc(g->has_target, ofp);
+  putc(g->has_target_time, ofp);
+  putc(g->is_completed, ofp);
+}

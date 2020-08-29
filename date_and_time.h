@@ -8,6 +8,10 @@ char * DATE_W_TIME;
 void print_date(struct tm * date, int display_time);
 void print_goal_array(goal array[], int size);
 
+//File IO
+void read_date(struct tm * date, FILE * ifp);
+void write_date(struct tm * date, FILE * ofp);
+
 int is_num(char c);
 int is_dash_slash(char c);
 int is_colon(char c);

@@ -25,6 +25,9 @@ void set_name(goal * array, int index, char * new_name);
 void complete_goal(goal * array, int index);
 void renew_goal(goal * array, int index);
 
+void read_goal(goal * g, FILE * ifp);
+void write_goal(goal * g, FILE * ofp);
+
 int get_target_array(char * target_str);
 
 goal create_goal(char * name, struct tm target_date, int has_target, int has_target_time);
