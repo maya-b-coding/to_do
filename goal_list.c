@@ -8,8 +8,8 @@
 #include "date_and_time.h"
 #include "dynamic_arrays.h"
 
-#define MAX_INPUT 500
-#define ARRAY_SIZE 1
+#define MAX_INPUT 1000
+#define ARRAY_SIZE 2
 
 int main()
 {
@@ -19,16 +19,34 @@ int main()
   char ** argv;
   int argc = 0;
 
-  int current_goals_size = 0;
-  int completed_goals_size = 0;
+  goal * current_goals;
+  goal * completed_goals;
 
-  int current_goals_max_size = ARRAY_SIZE;
-  int completed_goals_max_size = ARRAY_SIZE;
+  int current_goals_size;
+  int completed_goals_size;
 
-  goal * completed_goals = new_array(completed_goals_max_size);
-  goal * current_goals = new_array(current_goals_max_size);
+  int current_goals_max_size;
+  int completed_goals_max_size;
 
-  int goal_index = 0;
+  FILE * read_file;
+  FILE * write_file;
+
+  if ((read_file = fopen("my_goals.goal", "r")) != NULL)
+  {
+    read_goal_array(&current_goals, read_file, &current_goals_size, &current_goals_max_size);
+    read_goal_array(&completed_goals, read_file, &completed_goals_size, &completed_goals_max_size);
+  } else
+  {
+    current_goals_size = 0;
+    completed_goals_size = 0;
+
+    current_goals_max_size = ARRAY_SIZE;
+    completed_goals_max_size = ARRAY_SIZE;
+
+    current_goals = new_array(current_goals_max_size);
+    completed_goals = new_array(completed_goals_max_size);
+  }
+
   do
   {
     fgets(input, MAX_INPUT, stdin);
@@ -103,7 +121,7 @@ int main()
                 {
                   printf("Error: %d is not a valid index in the current goals array.\n", index);
                 } else {
-                  printf("Goal [%d] - \"%s\" deleted from current goals array\n", index, current_goals[goal_index].name);
+                  printf("Goal [%d] - \"%s\" deleted from current goals array\n", index, current_goals[index].name);
                   remove_element(current_goals, &current_goals_size, index);
                 }
                 break;
@@ -252,17 +270,38 @@ int main()
 
   } while (1);
 
+  //write to file
+  write_file = fopen("my_goals.goal", "w");
+
+  if (write_file == NULL)
+  {
+    printf("error opening write file\n");
+  } else {
+    write_goal_array(current_goals, write_file, current_goals_size);
+    write_goal_array(completed_goals, write_file, completed_goals_size);
+  }
+
   //free all used memory
 
-  for (int i = 0; i < goal_index; i++)
-  {
-    free_goal_name(completed_goals[i]);
-  }
-  for (int i = 0; i < goal_index; i++)
+  for (int i = 0; i < current_goals_size; i++)
   {
     free_goal_name(current_goals[i]);
   }
+  for (int i = 0; i < completed_goals_size; i++)
+  {
+    free_goal_name(completed_goals[i]);
+  }
 
-  free(completed_goals);
   free(current_goals);
+  free(completed_goals);
+
+  if (read_file != NULL)
+  {
+    fclose(read_file);
+  }
+
+  if (write_file != NULL)
+  {
+    fclose(write_file);
+  }
 }

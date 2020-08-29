@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <limits.h>
 #include "goal_list.h"
 #include "date_and_time.h"
 #include "dynamic_arrays.h"
@@ -309,9 +310,9 @@ void free_goal_name(goal g)
 void read_goal(goal * g, FILE * ifp)
 {
   //read dates
-  read_date(g->date_set, ifp);
-  read_date(g->date_target, ifp);
-  read_date(g->date_completed, ifp);
+  read_date(&(g->date_set), ifp);
+  read_date(&(g->date_target), ifp);
+  read_date(&(g->date_completed), ifp);
 
   //read name and its length
   int len = getw(ifp);
@@ -328,9 +329,9 @@ void read_goal(goal * g, FILE * ifp)
 void write_goal(goal * g, FILE * ofp)
 {
   //write dates
-  write_date(g->date_set, ofp);
-  write_date(g->date_target, ofp);
-  write_date(g->date_completed, ofp);
+  write_date(&(g->date_set), ofp);
+  write_date(&(g->date_target), ofp);
+  write_date(&(g->date_completed), ofp);
 
   //write name and its length
   int len = strlen(g->name);
@@ -341,4 +342,36 @@ void write_goal(goal * g, FILE * ofp)
   putc(g->has_target, ofp);
   putc(g->has_target_time, ofp);
   putc(g->is_completed, ofp);
+}
+
+void read_goal_array(goal ** array_ptr, FILE * ifp, int * size, int * max_size)
+{
+  *size = getw(ifp);
+  *max_size = 2;
+  while(*max_size <= *size)
+  {
+    *max_size = *max_size * 2;
+    if (*max_size < 0) // in case of overflow
+    {
+      *max_size = INT_MAX;
+      break;
+    }
+  }
+
+
+  *array_ptr = malloc(sizeof(goal) * *max_size);
+  goal * array = *array_ptr;
+  for (int i = 0; i < *size; i++)
+  {
+    read_goal(array + i, ifp);
+  }
+}
+
+void write_goal_array(goal * array, FILE * ofp, int size)
+{
+  putw(size, ofp);
+  for(int i = 0; i < size; i++)
+  {
+    write_goal(array + i, ofp);
+  }
 }

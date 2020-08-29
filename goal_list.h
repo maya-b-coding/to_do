@@ -27,6 +27,8 @@ void renew_goal(goal * array, int index);
 
 void read_goal(goal * g, FILE * ifp);
 void write_goal(goal * g, FILE * ofp);
+void read_goal_array(goal ** array_ptr, FILE * ifp, int * size, int * max_size);
+void write_goal_array(goal * array, FILE * ofp, int size);
 
 int get_target_array(char * target_str);
 
