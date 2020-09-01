@@ -35,6 +35,7 @@ int main()
   {
     read_goal_array(&current_goals, read_file, &current_goals_size, &current_goals_max_size);
     read_goal_array(&completed_goals, read_file, &completed_goals_size, &completed_goals_max_size);
+    fclose(read_file);
   } else
   {
     current_goals_size = 0;
@@ -257,7 +258,21 @@ int main()
               break;
           }
         }
-      } else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
+      } else if (strcmp(command, "save") == 0 | strcmp(command, "sv") == 0)
+      {
+        if ((write_file = fopen("my_goals.goal", "w")) == NULL)
+        {
+          printf("Error opening my_goals.goal for writing");
+          return -1;
+        } else
+        {
+          write_goal_array(current_goals, write_file, current_goals_size);
+          write_goal_array(completed_goals, write_file, completed_goals_size);
+          fclose(write_file);
+        }
+      }
+
+      else if (strcmp(command, "exit") == 0 || strcmp(command, "quit") == 0)
       {
         break;
       } else {
@@ -271,15 +286,16 @@ int main()
   } while (1);
 
   //write to file
-  write_file = fopen("my_goals.goal", "w");
 
-  if (write_file == NULL)
+  if ((write_file = fopen("my_goals.goal", "w")) == NULL)
   {
-    printf("error opening write file\n");
-  } else {
-    write_goal_array(current_goals, write_file, current_goals_size);
-    write_goal_array(completed_goals, write_file, completed_goals_size);
+    printf("Error opening my_goals.goal for writing");
+    return -1;
   }
+
+  write_goal_array(current_goals, write_file, current_goals_size);
+  write_goal_array(completed_goals, write_file, completed_goals_size);
+  fclose(write_file);
 
   //free all used memory
 
@@ -295,13 +311,5 @@ int main()
   free(current_goals);
   free(completed_goals);
 
-  if (read_file != NULL)
-  {
-    fclose(read_file);
-  }
 
-  if (write_file != NULL)
-  {
-    fclose(write_file);
-  }
 }
