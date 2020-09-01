@@ -1,0 +1,4 @@
+*.o
+goal_list.exe.stackdump
+goal_list.exe
+my_goals.goal
